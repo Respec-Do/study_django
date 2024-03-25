@@ -397,8 +397,7 @@
         makemigrations로 만든 migration 파일 실행
             python manage.py migrate [서비스 이름]
 
-        ※ 주의: 강사에게 보고 후 사용
-        migration 전체 삭제
+        ※ migration 전체 삭제
             python manage.py migrate --fake [서비스 이름] zero
 
         직접 migrations 파일 삭제!!
@@ -409,6 +408,61 @@
 -   python manage.py runserver [포트 번호]
 
 <hr>
+
+# View에 대하여
+
+- 왜 직접 타지 않고 서버를 거쳐서 가는가?
+  1. 실제 경로를 숨기기 위해, 보안의 목적성
+  2. DB의 조회등 연산의 목적성
+
+- 요청 과정
+
+      a.html -> urls.py -> views.py -> b.html
+
+- Example)
+
+      수정 : Post/update
+             Post/update-ok
+      --> 두 개의 경로가 필요
+          1개의 경로만 사용하자!
+
+      Post/update의 요청방식
+      Get / Post
+
+## 요청 방식
+- GET
+- POST
+
+### GET
+  - 수정할 데이터를 가져올 때
+    > ex) id=3
+  - url에 담아서 가는 방식 
+    > ex) a/b ? name=홍길동
+  - 길이의 제한이 있고 숨겨야하는 데이터에는 GET을 사용하면 안됨.
+  - POST 방식보다 GET이 빠름.
+ 
+### POST
+  - 수정완료를 눌렀을 때
+  - 길이의 제한이 없음 (숨겨져 있음)
+  - url에 보이지 않음
+  - 요청할 때 header에 request header라는 이름으로 key:value로 저장해서 전달함.
+
+## 응답 방식
+- render
+- redirect
+
+### render
+- 화면에서 화면으로 데이터를 보낼 수 있다.
+
+### redirect
+- view로 가기 때문에 데이터를 담아서 보낼 수 없다.
+
+### 왜 굳이 REDIRECT를 이용해야하는가?
+- RENDER 는 요청한 경로가 표시가 된다.
+- 만일, 결제 정보에서 render로 보내게 되면, 기존 정보가 다 담겨있어서 새로고침하게 되면 계속 결제가 되는 문제가 발생한다.
+  > Ex) pay/write로 계속 표기가 됨.
+- REDIRECT 는 초기화가 된다.
+  > Ex) redirect로 보내게 되면, 기존 정보들이 초기화되면서, 새로고침해도 pay/success로 표기가 된다.
 
 # 24.02.28 트러블 슈팅
 
